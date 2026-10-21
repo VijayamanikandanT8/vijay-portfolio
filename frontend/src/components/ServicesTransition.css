@@ -1,0 +1,128 @@
+/* Achievements -> Services bridge. Scoped to .sx */
+.sx {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  min-height: 520px;
+  background: #ececec; /* Services background, revealed as the mesh shatters */
+}
+
+.sx * {
+  box-sizing: border-box;
+}
+
+.sx__mesh {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sx__content {
+  position: absolute;
+  inset: 0;
+}
+
+/* white + difference = light on the dark mesh, black on the light page */
+.sx__meta,
+.sx__word,
+.sx__badge {
+  mix-blend-mode: difference;
+  color: #fff;
+}
+
+.sx__meta {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px clamp(20px, 4vw, 48px);
+}
+
+.sx__meta-left {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+/* boxed eyebrow, same as the Services header */
+.sx__meta-right {
+  padding: 0.2rem 1rem;
+  border: 4px solid #fff;
+  font-family: "Anton", Impact, sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+}
+
+.sx__words {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 clamp(20px, 4vw, 48px);
+  pointer-events: none;
+}
+
+.sx__word {
+  margin: 0;
+  overflow: hidden; /* mask for the letter rise */
+  padding: 0.04em 0.1em 0.02em;
+  font-family: "Anton", Impact, sans-serif;
+  font-weight: 400;
+  font-size: clamp(4rem, 17vw, 17rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  -webkit-text-stroke: 2px #fff;
+  -webkit-text-fill-color: var(--f, transparent);
+}
+.sx__word--a {
+  align-self: flex-start;
+}
+.sx__word--b {
+  align-self: flex-end;
+  --f: rgba(255, 255, 255, 0);
+}
+.sx__word .char {
+  display: inline-block;
+  will-change: transform;
+}
+
+.sx__badge {
+  position: absolute;
+  right: clamp(24px, 9vw, 150px);
+  top: 18%;
+  width: clamp(110px, 13vw, 200px);
+  height: auto;
+  overflow: visible;
+  will-change: transform;
+}
+.sx__badge text {
+  font-family: "Anton", Impact, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: #fff;
+}
+.sx__badge-arrow {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 52em) {
+  .sx__word { -webkit-text-stroke-width: 1.5px; }
+  .sx__badge { top: 14%; }
+}

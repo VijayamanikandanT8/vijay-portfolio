@@ -1,0 +1,709 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Buenard:wght@400;700&display=swap");
+
+/* ============================================================
+   SERVICES / WHAT I DO  (Grid Layout with Motion Hover Effect)
+   Every class is prefixed "svc-" so nothing leaks into the rest
+   of the site. Keep transform/filter/contain OFF .svc and its
+   parents (the preview overlay is position:fixed).
+   ============================================================ */
+
+.svc {
+  --svc-text: #000;
+  --svc-bg: #ececec;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 110px 0 0;
+  overflow-x: clip;
+  color: var(--svc-text);
+  background: var(--svc-bg);
+  font-family: "Buenard", serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.svc *,
+.svc *::before,
+.svc *::after,
+.svc-ov *,
+.svc-ov *::before,
+.svc-ov *::after {
+  box-sizing: border-box;
+}
+
+body.svc-lock {
+  overflow: hidden;
+}
+
+.svc a {
+  color: var(--svc-text);
+  text-decoration: none;
+  outline: none;
+}
+
+.svc a:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 6px;
+}
+
+/* ---------- header ---------- */
+
+.svc-header {
+  position: relative;
+  z-index: 2;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.svc-header__eyebrow {
+  display: inline-block;
+  padding: 0.2rem 1rem;
+  border: 4px solid var(--svc-text);
+  font-family: "Anton", sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+}
+
+.svc-header__title {
+  margin: 1.2rem 0 0;
+  font-family: "Anton", sans-serif;
+  font-weight: normal;
+  font-size: clamp(3.2rem, 9vw, 7.5rem);
+  line-height: 1;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  -webkit-text-stroke: 2px #000;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: -webkit-text-fill-color 0.35s;
+}
+
+.svc-header__title:hover {
+  -webkit-text-fill-color: #000;
+}
+
+.svc-header__sub {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+}
+
+/* ---------- grid ---------- */
+
+.svc-grid {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-bottom: 10rem;
+}
+
+.svc-item {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 10rem 0;
+  cursor: pointer;
+}
+
+.svc-item--noclick {
+  cursor: default;
+}
+
+.svc-box {
+  position: relative;
+  margin: 2rem;
+}
+
+.svc-box__title {
+  margin: 0;
+  line-height: 1;
+  position: absolute;
+  z-index: 100;
+}
+
+.svc-box__title-inner {
+  display: block;
+  position: relative;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: 4.15rem;
+  letter-spacing: 0.15rem;
+  line-height: 1.25;
+  font-family: "Anton", sans-serif;
+}
+
+.svc-box__title-inner[data-hover] {
+  -webkit-text-stroke: 2px #000;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.svc-box__title-inner::before {
+  content: attr(data-hover);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  -webkit-text-stroke: 0;
+  -webkit-text-fill-color: #000;
+  color: #000;
+  transition: all 0.3s;
+}
+
+.svc-item:hover .svc-box__title-inner::before {
+  height: 100%;
+  width: 100%;
+}
+
+.svc-box__text {
+  margin: 0.5rem 1rem;
+  position: absolute;
+  top: -6rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.15rem;
+  font-size: 1.75rem;
+  font-family: "Anton", sans-serif;
+}
+
+.svc-box__text-inner {
+  position: relative;
+  display: block;
+  border: 6px solid var(--svc-text);
+  padding: 0.25rem 1.25rem;
+}
+
+.svc-box__text-inner--reverse {
+  background: var(--svc-text);
+  color: var(--svc-bg);
+}
+
+.svc-box__img {
+  display: block;
+  flex: none;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  border: 0;
+  filter: grayscale(1);
+  transition: filter 0.3s;
+  pointer-events: none;
+}
+
+.svc-item:hover .svc-box__img:not(.svc-box__img--original) {
+  filter: grayscale(0);
+}
+
+.svc-box__shadow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: -1rem;
+  left: -1rem;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAOklEQVQoU43MSwoAMAgD0eT+h7ZYaOlHo7N+DNHL2HAGgBWcyGcKbqTghTL4oQiG6IUpOqFEC5bI4QD8PAoKd9j4XwAAAABJRU5ErkJggg==);
+}
+
+.svc-box__deco {
+  font-size: 6rem;
+  line-height: 1;
+  font-weight: bold;
+  position: absolute;
+  bottom: -4rem;
+  right: -4rem;
+  display: none;
+  font-family: "Buenard", serif;
+}
+
+.svc-box__content {
+  position: absolute;
+  max-width: 195px;
+  margin: 0;
+  font-size: 0.9rem;
+  text-align: right;
+  display: none;
+}
+
+.svc-box__content strong {
+  white-space: nowrap;
+}
+
+/* ---------- preview overlay ---------- */
+
+.svc-ov {
+  pointer-events: none;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  overflow: hidden;
+  color: #000;
+  font-family: "Buenard", serif;
+  visibility: hidden;
+}
+
+.svc-ov--open {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* keep it visible while the closing wipe is still running */
+.svc-ov[aria-hidden="false"] {
+  visibility: visible;
+}
+
+.svc-ov__reveal {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #000;
+  position: absolute;
+  z-index: 100;
+}
+
+.svc-ov__item {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #ececec;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5rem 5vw;
+  justify-content: center;
+}
+
+.svc-ov__item .svc-box {
+  max-width: 600px;
+  max-height: 100%;
+  margin: 0;
+}
+
+.svc-ov__item .svc-box__title {
+  bottom: 0;
+}
+
+.svc-box__img--original {
+  max-height: calc(100vh - 10rem);
+  filter: none;
+}
+
+.svc-ov__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 200;
+  background: none;
+  border: 0;
+  margin: 1rem;
+  padding: 1rem;
+  opacity: 0;
+  color: #000;
+}
+
+.svc-ov__close:focus {
+  outline: none;
+}
+
+.svc-ov__close:focus-visible {
+  outline: 3px solid #000;
+}
+
+.svc-icon {
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  margin: 0 auto;
+  fill: currentColor;
+}
+
+.svc-ov__content {
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 25rem;
+  margin: 1rem 0 0 10vw;
+}
+
+/* ---------- text fixes: keep labels off the titles ---------- */
+
+/* API (card 2) and Python (card 7): label goes to the top, title stays at the bottom */
+.svc-item[data-svc="1"] .svc-box__text,
+.svc-item[data-svc="6"] .svc-box__text,
+#svc-preview-1 .svc-box__text,
+#svc-preview-6 .svc-box__text {
+  top: -6rem;
+  bottom: auto;
+}
+
+/* horizontal titles (API, Python, Ship) a little smaller so they fit the card width */
+@media screen and (min-width: 55em) {
+  .svc-box__title--straight .svc-box__title-inner {
+    font-size: 3.4rem;
+  }
+}
+
+/* ---------- spacing: keep first-row labels clear of the heading ---------- */
+
+.svc .svc-header {
+  padding-bottom: 2rem;
+}
+
+@media screen and (min-width: 55em) {
+  .svc .svc-grid {
+    padding-top: 5rem;
+  }
+}
+
+@media screen and (min-width: 80em) {
+  .svc .svc-grid {
+    padding-top: 10rem;
+  }
+}
+
+/* ---------- responsive ---------- */
+
+@media screen and (min-width: 55em) {
+  .svc-grid {
+    display: grid;
+    align-items: center;
+    padding: 3rem 3rem 15rem 3rem;
+    grid-row-gap: 2rem;
+    grid-template-columns: repeat(3, calc(100% / 3));
+  }
+  .svc-item {
+    margin: 0;
+  }
+  .svc-box {
+    margin: 4rem;
+  }
+  .svc-box__title {
+    top: -4rem;
+    right: -4.5rem;
+    -webkit-writing-mode: vertical-rl;
+    writing-mode: vertical-rl;
+  }
+  .svc-box__title--straight {
+    -webkit-writing-mode: horizontal-tb;
+    writing-mode: horizontal-tb;
+  }
+  .svc-box__title--straight .svc-box__title-inner::before {
+    width: 0;
+    height: auto;
+  }
+  .svc-box__title--bottom {
+    bottom: -5rem;
+    top: auto;
+  }
+  .svc-box__title--left {
+    left: -2rem;
+    right: auto;
+  }
+  .svc-box__text--topcloser {
+    top: -5rem;
+  }
+  .svc-box__text--bottom {
+    bottom: -5rem;
+    top: auto;
+  }
+  .svc-box__text--bottomcloser {
+    bottom: -5rem;
+    top: auto;
+  }
+  .svc-box__text--right {
+    right: 0;
+    left: auto;
+  }
+  .svc-box__text-inner--rotated1 {
+    transform: rotate(4deg);
+  }
+  .svc-box__text-inner--rotated2 {
+    transform: rotate(-3deg);
+  }
+  .svc-box__text-inner--rotated3 {
+    transform: rotate(-15deg);
+  }
+  .svc-box__deco {
+    display: block;
+  }
+  .svc-box__deco--left {
+    right: auto;
+    left: -3rem;
+  }
+  .svc-box__deco--top {
+    top: 0;
+    bottom: auto;
+  }
+  .svc-ov__item {
+    flex-direction: row;
+  }
+  .svc-ov__content {
+    font-size: 2.25rem;
+    margin-top: 0;
+  }
+  .svc-ov__item .svc-box__title--bottom {
+    bottom: 0;
+  }
+}
+
+@media screen and (min-width: 80em) {
+  .svc-grid {
+    grid-template-columns: repeat(4, 25%);
+  }
+  .svc-item:nth-child(4n-2) {
+    margin-top: -8rem;
+    margin-bottom: 8rem;
+  }
+  .svc-item:nth-child(4n) {
+    margin-top: -5rem;
+  }
+  .svc-box {
+    margin: 6rem 4.5rem;
+  }
+  .svc-box__content {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 55em) {
+  .svc {
+    padding-top: 80px;
+  }
+  .svc-box__title-inner {
+    font-size: 3.2rem;
+  }
+}
+/* ---------- service preview: headline + "What you get" list ---------- */
+.svc-ov__item .svc-ov__content {
+  max-width: 30rem;
+  margin: 1.2rem 0 0;
+  font-size: 1rem;
+}
+.svc-ov__lead {
+  display: block;
+  font-size: 1.35rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+.svc-ov__label {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1.4rem 0 0.6rem;
+  font-family: "Anton", sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.25rem;
+  text-transform: uppercase;
+}
+.svc-ov__label::after {
+  content: "";
+  flex: 1;
+  height: 3px;
+  background: #000;
+}
+.svc-ov__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.svc-ov__list li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.7rem;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.35);
+}
+.svc-ov__list li::before {
+  content: "\2192";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  font-weight: 700;
+}
+
+@media screen and (min-width: 55em) {
+  .svc-ov__item .svc-ov__content {
+    margin: 0 0 0 6vw;
+  }
+  .svc-ov__lead {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  .svc-ov__list {
+    font-size: 1.1rem;
+  }
+}
+
+/* phones: smaller picture so the list fits, and the panel can scroll */
+@media screen and (max-width: 54.99em) {
+  .svc-ov__item {
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding-top: 4.5rem;
+  }
+  .svc-box__img--original {
+    max-height: 34vh;
+  }
+}
+/* ---------- service preview: headline + "What you get" ---------- */
+.svc-ov__item .svc-ov__content {
+  position: relative;
+  max-width: 32rem;
+  margin: 1.2rem 0 0;
+  font-size: 1rem;
+}
+
+/* the big faint number is not used any more */
+.svc-ov__num {
+  display: none;
+}
+
+/* headline with a thick black bar */
+.svc-ov__lead {
+  display: block;
+  padding-left: 1rem;
+  border-left: 6px solid #000;
+  font-size: 1.35rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+/* tilted black sticker label */
+.svc-ov__label {
+  display: inline-block;
+  margin: 1.8rem 0 1.1rem;
+  padding: 0.3rem 0.9rem;
+  background: #000;
+  color: #ececec;
+  font-family: "Anton", sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.28rem;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+/* each deliverable = a flat card with a round check badge (no numbers) */
+.svc-ov__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.svc-ov__list li {
+  position: relative;
+  display: block;
+  padding: 0.85rem 1rem 0.85rem 3.6rem;
+  background: #fff;
+  border: 3px solid #000;
+  box-shadow: 6px 6px 0 #000;
+  font-size: 1rem;
+  line-height: 1.4;
+  cursor: default;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+/* round black badge, fixed position on the left: it can never touch the text */
+.svc-ov__list li::before {
+  content: "";
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  width: 1.7rem;
+  height: 1.7rem;
+  margin-top: -0.85rem;
+  border-radius: 50%;
+  background: #000;
+  transition: background 0.25s ease;
+}
+/* white check mark inside the badge */
+.svc-ov__list li::after {
+  content: "";
+  position: absolute;
+  left: 1.5rem;
+  top: 50%;
+  width: 0.45rem;
+  height: 0.8rem;
+  margin-top: -0.55rem;
+  border: solid #ececec;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+  transition: border-color 0.25s ease;
+}
+.svc-ov__list li:hover {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 #000;
+  background: #000;
+  color: #ececec;
+}
+.svc-ov__list li:hover::before {
+  background: #ececec;
+}
+.svc-ov__list li:hover::after {
+  border-color: #000;
+}
+
+/* cards pop in one by one after the preview opens */
+@keyframes svcPop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(-1deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.svc-ov--open .svc-ov__list li {
+  animation: svcPop 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+.svc-ov--open .svc-ov__list li:nth-child(1) { animation-delay: 0.75s; }
+.svc-ov--open .svc-ov__list li:nth-child(2) { animation-delay: 0.84s; }
+.svc-ov--open .svc-ov__list li:nth-child(3) { animation-delay: 0.93s; }
+.svc-ov--open .svc-ov__list li:nth-child(4) { animation-delay: 1.02s; }
+
+@media screen and (max-width: 54.99em) {
+  .svc-ov__item .svc-box__title { position: static; margin: 0.8rem 0 0; }
+  .svc-ov__item .svc-box__title-inner { font-size: clamp(2.2rem, 11vw, 3.4rem); line-height: 1.05; }
+  .svc-ov__item .svc-box__text { position: static; margin: 0 0 0.6rem; }
+  .svc-ov__item { overscroll-behavior: contain; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-ov--open .svc-ov__list li {
+    animation: none;
+  }
+}
+
+@media screen and (min-width: 55em) {
+  .svc-ov__item .svc-ov__content {
+    margin: 0 0 0 6vw;
+  }
+  .svc-ov__lead {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  .svc-ov__list li {
+    font-size: 1.1rem;
+  }
+}
+
+/* phones: smaller picture so the cards fit, and the panel can scroll */
+@media screen and (max-width: 54.99em) {
+  .svc-ov__item {
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding-top: 4.5rem;
+  }
+  .svc-box__img--original {
+    max-height: 34vh;
+  }
+  .svc-ov__list li {
+    box-shadow: 4px 4px 0 #000;
+  }
+}

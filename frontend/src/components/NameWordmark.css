@@ -1,0 +1,211 @@
+/* NAME WORDMARK · "Morph Wave"
+   Variable font (Anybody): weight + width are animated
+   through registered custom properties. */
+
+@property --mo { syntax: "<number>"; inherits: false; initial-value: 1; } /* 1 = hairline sliver, 0 = resting face */
+@property --wv { syntax: "<number>"; inherits: false; initial-value: 0; } /* travelling swell */
+
+.nw {
+  --nw-c1: var(--cyan, #5fd8ff);
+  --nw-c2: var(--violet, #8b7bff);
+  --nw-c3: var(--magenta, #f472b6);
+  --nw-wght: 800; /* resting weight (100-900) */
+  --nw-wdth: 118; /* resting width  (50-150)  */
+
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 clamp(14px, 1.6vw, 26px);
+  font-family: "Anybody", var(--font-display, "Space Grotesk"), sans-serif;
+  font-weight: var(--nw-wght);
+  font-stretch: calc(var(--nw-wdth) * 1%);
+  line-height: 1;
+  letter-spacing: 0;
+  --v: 0;
+}
+
+/* hidden measuring row */
+.nw-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  white-space: nowrap;
+  visibility: hidden;
+  pointer-events: none;
+  font-size: 100px;
+  line-height: 1;
+}
+.nw-ghost i { font-style: normal; display: block; }
+
+.nw-inner {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  white-space: nowrap;
+  font-size: clamp(2.2rem, 8vw, 11rem); /* first-paint fallback; JS fits it exactly */
+  line-height: 1.04;
+}
+.nw-sp { display: inline-block; width: 0.24em; }
+.nw-ghost .nw-sp { width: 0.24em; height: 1px; }
+.nw-br { display: none; flex-basis: 100%; height: 0; }
+.nw.is-stack .nw-br { display: block; }
+.nw.is-stack .nw-inner { line-height: 1; }
+
+/* layer 1: fixed-width box + entrance rise */
+.nw-l {
+  --lift: 0;
+  position: relative;
+  display: inline-flex;
+  justify-content: center; /* a swelling glyph overflows equally on both sides */
+  opacity: 0;
+}
+.nw.is-in .nw-l {
+  animation: nwRise 1.1s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  animation-delay: calc(var(--d) * 1ms + 60ms);
+}
+
+/* glow that follows the pointer */
+.nw-l::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 1.5em;
+  height: 1.1em;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--nw-c2) 55%, transparent), transparent);
+  opacity: calc(var(--lift) * 0.9);
+  pointer-events: none;
+}
+
+/* layer 2: owns the font axes + idle breathing + outline echo */
+.nw-f {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  font-weight: calc(var(--nw-wght) - var(--mo) * 700 + var(--wv) * 100 + var(--lift) * 100);
+  font-stretch: calc(var(--nw-wdth) * 1% - var(--mo) * 68% + var(--wv) * 22% + var(--lift) * 26%);
+  animation:
+    nwFloat 7s ease-in-out infinite,
+    nwMorph 1.4s cubic-bezier(0.2, 0.9, 0.25, 1) both,
+    nwWave 6.5s ease-in-out infinite;
+  animation-delay:
+    calc(var(--i) * -0.45s),
+    calc(var(--d) * 1ms + 60ms),
+    calc(2.6s + var(--i) * 110ms);
+  animation-play-state: paused;
+}
+.nw.is-in .nw-f { animation-play-state: running; }
+
+/* outline echo sliding behind the glyph (a sibling of .nw-g, so it never
+   becomes part of the gradient's text clip) */
+.nw-f::before {
+  content: attr(data-ch);
+  position: absolute;
+  left: 0.015em;
+  top: 0;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.2px color-mix(in srgb, var(--nw-c1) 55%, rgba(255, 255, 255, 0.9));
+  opacity: 0.55;
+  translate: calc(0.045em + var(--lift) * 0.05em) calc(-0.045em - var(--lift) * 0.05em);
+  pointer-events: none;
+}
+
+/* layer 3: the glyph (gradient + pointer lift + scroll skew) */
+.nw-g {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.015em 0.14em;
+  margin-bottom: -0.14em;
+  color: transparent;
+  -webkit-background-clip: text;
+          background-clip: text;
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 36%),
+    linear-gradient(180deg, transparent 46%, rgba(6, 7, 18, 0.5) 100%),
+    linear-gradient(100deg, var(--nw-c1) 0%, var(--nw-c2) 48%, var(--nw-c3) 100%);
+  background-size: 100% 100%, 100% 100%, calc(var(--gw, 800) * 1px) 100%;
+  background-position: 0 0, 0 0, calc(var(--gx, 0) * -1px) 0;
+  background-repeat: no-repeat;
+  transform-origin: 50% 90%;
+  transform:
+    translate3d(0, calc(var(--lift) * -0.1em), 0)
+    skewX(calc(var(--v, 0) * var(--sk, 0) * 1deg));
+  will-change: transform;
+}
+
+/* the final "." glows softly on its own */
+.nw-dot::before { animation: nwPulse 2.6s ease-in-out infinite; animation-play-state: paused; }
+.nw.is-in .nw-dot::before { animation-play-state: running; }
+
+/* hairline with a travelling light */
+.nw-rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22) 10%, rgba(255, 255, 255, 0.22) 90%, transparent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 1.2s cubic-bezier(0.2, 0.9, 0.25, 1) 0.5s;
+}
+.nw.is-in .nw-rule { transform: scaleX(1); }
+.nw-rule::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent 0, var(--nw-c2) 40%, var(--nw-c3) 60%, transparent 100%) no-repeat;
+  background-size: 22% 100%;
+  background-position: -30% 0;
+  animation: nwScan 5.5s ease-in-out infinite;
+  animation-play-state: paused;
+}
+.nw.is-in .nw-rule::after { animation-play-state: running; }
+
+@keyframes nwRise {
+  0%   { opacity: 0; transform: translate3d(0, 0.5em, 0); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes nwMorph {
+  0%   { --mo: 1; }
+  100% { --mo: 0; }
+}
+@keyframes nwWave {
+  0%, 16%, 100% { --wv: 0; }
+  7%            { --wv: 1; }
+}
+@keyframes nwFloat {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, calc(-0.02em - 0.01em * var(--sk, 0)), 0); }
+}
+@keyframes nwPulse {
+  0%, 100% { opacity: 0.12; }
+  50%      { opacity: 0.6; }
+}
+@keyframes nwScan {
+  0%   { background-position: -30% 0; }
+  100% { background-position: 130% 0; }
+}
+
+/* keep other sections' "pause animations" rules from freezing it */
+html body .nw.is-in .nw-f,
+html body .nw.is-in .nw-rule::after,
+html body .nw.is-in .nw-dot::before { animation-play-state: running !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nw-l { opacity: 1; animation: none !important; }
+  .nw-f { --mo: 0; --wv: 0; animation: none !important; }
+  .nw-dot::before, .nw-rule::after { animation: none !important; }
+  .nw-rule { transform: none; transition: none; }
+}

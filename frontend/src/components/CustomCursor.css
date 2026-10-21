@@ -1,0 +1,231 @@
+/* PAGE-AWARE CURSOR: two-tone (dark underlay + bright overlay) so it stays
+   visible on light AND dark sections. No mix-blend-mode, nothing is covered:
+   rings are outline-only and the page content is never hidden. */
+
+html.vx-on,
+html.vx-on * { cursor: none !important; }
+
+.vx {
+  --c1: #5fd8ff; --c2: #8b7bff;
+  --s: 1; --ds: 1; --hs: 1; --press: 1; --u: 1;
+  position: fixed; inset: 0; z-index: 2147483000;
+  pointer-events: none; contain: layout style;
+}
+.vx-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+.vx-cur { position: absolute; inset: 0; opacity: 0; transition: opacity 0.25s ease; }
+.vx.is-shown .vx-cur { opacity: 1; }
+
+/* ---------- soft glow ---------- */
+.vx-halo {
+  position: absolute; left: 0; top: 0; width: 150px; height: 150px; margin: -75px 0 0 -75px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    color-mix(in srgb, var(--c1) 18%, transparent) 0%,
+    color-mix(in srgb, var(--c2) 8%, transparent) 42%, transparent 70%);
+  scale: calc(var(--hs) * var(--u));
+  transition: scale 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+  will-change: transform;
+}
+
+/* ---------- crosshair guides (Projects page only) ---------- */
+.vx-gh, .vx-gv {
+  position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0;
+  transition: opacity 0.3s ease; will-change: transform;
+}
+.vx-gh {
+  width: 100%; height: 1px;
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--c1) 70%, transparent) 0 6px, transparent 6px 12px);
+}
+.vx-gv {
+  width: 1px; height: 100%;
+  background: repeating-linear-gradient(180deg, color-mix(in srgb, var(--c1) 70%, transparent) 0 6px, transparent 6px 12px);
+}
+.vx[data-theme="projects"]:not([data-state="text"]) .vx-gh,
+.vx[data-theme="projects"]:not([data-state="text"]) .vx-gv { opacity: 0.3; }
+
+/* ---------- ring ---------- */
+.vx-ring { position: absolute; left: 0; top: 0; will-change: transform; }
+.vx-box {
+  position: absolute; left: 0; top: 0; width: 52px; height: 52px; margin: -26px 0 0 -26px;
+  scale: calc(var(--s) * var(--press) * var(--u));
+  transition: scale 0.38s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.22s ease, filter 0.22s ease;
+}
+.vx-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.vx-spin { transform-origin: 32px 32px; animation: vxSpin 12s linear infinite; }
+
+.vx-fill {
+  position: absolute; inset: 3px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%,
+    color-mix(in srgb, var(--c1) 38%, transparent),
+    color-mix(in srgb, var(--c2) 26%, transparent));
+  opacity: 0; transition: opacity 0.3s ease;
+}
+
+.vx-s { display: none; }
+.vx[data-shape="orbit"] .vx-s--orbit,
+.vx[data-shape="twin"] .vx-s--twin,
+.vx[data-shape="hex"] .vx-s--hex,
+.vx[data-shape="target"] .vx-s--target,
+.vx[data-shape="dash"] .vx-s--dash,
+.vx[data-shape="diamond"] .vx-s--diamond,
+.vx[data-shape="seal"] .vx-s--seal,
+.vx[data-shape="spark"] .vx-s--spark,
+.vx[data-shape="square"] .vx-s--square,
+.vx[data-shape="doc"] .vx-s--doc,
+.vx[data-shape="pulse"] .vx-s--pulse { display: inline; }
+
+.vx-under, .vx-over { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.vx-under { stroke: rgba(7, 9, 22, 0.66); stroke-width: 5; }
+.vx-over { stroke: url(#vxGrad); stroke-width: 2; }
+.vx-under .sat { fill: #070916; stroke: none; r: 5.2; }
+.vx-over .sat { fill: #fff; stroke: var(--c2); stroke-width: 1.5; r: 3.2; }
+
+.vx-ping {
+  fill: none; stroke: var(--c1); stroke-width: 1.5;
+  transform-origin: 32px 32px; animation: vxPing 2s ease-out infinite;
+}
+
+/* ---------- a different idle motion on every page ---------- */
+.vx[data-shape="orbit"]   .vx-spin { animation-duration: 10s; }
+.vx[data-shape="twin"]    .vx-spin { animation-duration: 6s; animation-direction: reverse; }
+.vx[data-shape="hex"]     .vx-spin { animation-duration: 22s; }
+.vx[data-shape="hex"]     .vx-svg  { animation: vxBreathe 3.2s ease-in-out infinite; }
+.vx[data-shape="target"]  .vx-spin { animation: none; }
+.vx[data-shape="target"]  .vx-svg  { animation: vxBreathe 2.4s ease-in-out infinite; }
+.vx[data-shape="dash"]    .vx-spin { animation-duration: 9s; animation-direction: reverse; }
+.vx[data-shape="diamond"] .vx-spin { animation: vxTurn 5s cubic-bezier(0.7, 0, 0.3, 1) infinite; }
+.vx[data-shape="seal"]    .vx-spin { animation-duration: 16s; }
+.vx[data-shape="spark"]   .vx-spin { animation: none; }
+.vx[data-shape="spark"]   .vx-svg  { animation: vxTwinkle 1.8s ease-in-out infinite; }
+.vx[data-shape="square"]  .vx-spin { animation: vxTurn 4.5s cubic-bezier(0.7, 0, 0.3, 1) infinite; }
+.vx[data-shape="pulse"]   .vx-spin { animation: none; }
+.vx[data-shape="doc"]     .vx-spin { animation: vxFloat 3.2s ease-in-out infinite; }
+
+/* ---------- the centre dot also changes with the page ---------- */
+.vx-dot { position: absolute; left: 0; top: 0; will-change: transform; }
+.vx-dot::before {
+  content: ""; display: block; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%; background: #fff; border: 2px solid #070916;
+  box-shadow: 0 0 0 1.5px var(--c1), 0 0 14px 2px color-mix(in srgb, var(--c1) 70%, transparent);
+  scale: calc(var(--ds) * var(--u));
+  transition: scale 0.3s cubic-bezier(0.2, 0.9, 0.3, 1), width 0.25s ease, height 0.25s ease,
+    margin 0.25s ease, border-radius 0.25s ease, rotate 0.25s ease, background 0.25s ease;
+}
+.vx[data-theme="about"] .vx-dot::before {
+  box-shadow: 0 0 0 1.5px var(--c1), 0 0 20px 5px color-mix(in srgb, var(--c1) 55%, transparent);
+}
+.vx[data-theme="skills"] .vx-dot::before,
+.vx[data-theme="education"] .vx-dot::before { border-radius: 2px; rotate: 45deg; }
+.vx[data-theme="projects"] .vx-dot::before {
+  width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 1px; border-width: 1.5px;
+}
+.vx[data-theme="experience"] .vx-dot::before {
+  width: 14px; height: 6px; margin: -3px 0 0 -7px; border-radius: 6px; border-width: 1.5px;
+}
+.vx[data-theme="certifications"] .vx-dot::before { background: var(--c1); border-color: #fff; }
+.vx[data-theme="achievements"] .vx-dot::before {
+  background: linear-gradient(135deg, #fff, var(--c1));
+  box-shadow: 0 0 0 1.5px var(--c2), 0 0 20px 4px color-mix(in srgb, var(--c1) 70%, transparent);
+}
+.vx[data-theme="services"] .vx-dot::before { border-radius: 3px; }
+.vx[data-theme="contact"] .vx-dot::before { animation: vxBeat 1.6s ease-out infinite; }
+.vx[data-theme="resume"] .vx-dot::before {
+  width: 8px; height: 11px; margin: -5.5px 0 0 -4px; border-radius: 2px;
+}
+
+/* ---------- button / link frame ---------- */
+.vx-frame {
+  position: absolute; left: 0; top: 0; width: 56px; height: 40px; border-radius: 14px;
+  border: 1.5px solid #fff;
+  box-shadow: 0 0 0 1.5px rgba(7, 9, 22, 0.72), inset 0 0 0 1.5px rgba(7, 9, 22, 0.35),
+    0 0 26px color-mix(in srgb, var(--c1) 45%, transparent);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--c1) 8%, transparent),
+    color-mix(in srgb, var(--c2) 8%, transparent));
+  opacity: 0; transform: translate(-50%, -50%) scale(0.7);
+  transition: width 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), height 0.28s cubic-bezier(0.2, 0.9, 0.3, 1),
+    border-radius 0.28s ease, opacity 0.2s ease, transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+/* ---------- label ---------- */
+.vx-tag { position: absolute; left: 0; top: 0; will-change: transform; }
+.vx-tag__in {
+  display: inline-flex; align-items: center; gap: 9px; padding: 7px 12px; white-space: nowrap;
+  font: 600 10.5px/1 var(--font-mono, "JetBrains Mono"), monospace;
+  letter-spacing: 0.2em; text-transform: uppercase; color: #fff;
+  background: rgba(8, 10, 24, 0.88); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 999px;
+  box-shadow: 0 12px 26px -10px rgba(0, 0, 0, 0.65),
+    0 0 0 1px color-mix(in srgb, var(--c1) 45%, transparent);
+  opacity: 0; translate: 0 6px; scale: 0.92;
+  transition: opacity 0.25s ease, translate 0.3s cubic-bezier(0.2, 0.9, 0.3, 1),
+    scale 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.vx-tag.is-on .vx-tag__in { opacity: 1; translate: 0 0; scale: 1; }
+.vx-tag__in b {
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--c1), var(--c2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* ---------- states (buttons, links, forms, drag, zoom) ---------- */
+.vx[data-down="1"] { --press: 0.82; }
+.vx[data-state="link"]   { --s: 1.45; --ds: 0.8; }
+.vx[data-state="view"]   { --s: 1.9;  --ds: 0.5; --hs: 1.4; }
+.vx[data-state="drag"]   { --s: 1.6;  --ds: 0.5; --hs: 1.3; }
+.vx[data-state="zoom"]   { --s: 1.7;  --ds: 0.5; --hs: 1.3; }
+.vx[data-state="check"]  { --s: 1.15; --ds: 0.6; }
+.vx[data-state="magnet"] { --s: 0.5;  --ds: 0.65; }
+.vx[data-state="block"]  { --s: 1;    --ds: 0.7; }
+.vx[data-state="text"]   { --s: 0; }
+
+/* light tint only: the content under the ring stays readable */
+.vx[data-state="view"] .vx-fill,
+.vx[data-state="drag"] .vx-fill,
+.vx[data-state="zoom"] .vx-fill { opacity: 0.5; }
+.vx[data-state="check"] .vx-fill { opacity: 0.35; }
+
+.vx[data-state="magnet"] .vx-box { opacity: 0; }
+.vx[data-state="magnet"] .vx-frame { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.vx[data-down="1"][data-state="magnet"] .vx-frame { transform: translate(-50%, -50%) scale(0.95); }
+
+/* disabled: greyed out ring, red dot */
+.vx[data-state="block"] .vx-box { opacity: 0.55; filter: grayscale(1); }
+.vx[data-state="block"] .vx-dot::before {
+  box-shadow: 0 0 0 1.5px #ff5d6c, 0 0 14px 2px rgba(255, 93, 108, 0.6);
+}
+
+/* text fields: a glowing text caret in the page colours (kept last so it wins) */
+.vx[data-state="text"] .vx-dot::before {
+  width: 3px; height: 26px; margin: -13px 0 0 -1.5px; border-width: 1px; border-radius: 2px; rotate: 0deg;
+  background: linear-gradient(180deg, var(--c1), var(--c2));
+  box-shadow: 0 0 0 1px rgba(7, 9, 22, 0.7), 0 0 14px 2px color-mix(in srgb, var(--c1) 65%, transparent);
+  animation: none;
+}
+
+/* keep the cursor animating while Projects / Achievements pause page animations */
+html body .vx,
+html body .vx *,
+html body .vx *::before,
+html body .vx *::after { animation-play-state: running !important; }
+
+@keyframes vxSpin { to { transform: rotate(360deg); } }
+@keyframes vxPing {
+  0%   { transform: scale(0.7); opacity: 0.9; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+@keyframes vxBreathe { 0%, 100% { scale: 1; } 50% { scale: 0.86; } }
+@keyframes vxTwinkle {
+  0%, 100% { scale: 0.88; rotate: 0deg; }
+  50%      { scale: 1.1;  rotate: 22deg; }
+}
+@keyframes vxTurn { 0%, 45% { transform: rotate(0deg); } 100% { transform: rotate(90deg); } }
+@keyframes vxFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+@keyframes vxBeat {
+  0%   { box-shadow: 0 0 0 1.5px var(--c1), 0 0 0 0 color-mix(in srgb, var(--c1) 70%, transparent); }
+  100% { box-shadow: 0 0 0 1.5px var(--c1), 0 0 0 14px transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vx .vx-spin, .vx .vx-svg, .vx .vx-ping, .vx .vx-dot::before { animation: none !important; }
+}
