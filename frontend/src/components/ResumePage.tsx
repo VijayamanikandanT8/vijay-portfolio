@@ -5,7 +5,7 @@ import "./ResumePage.css";
 // ---------------------------------------------------------------------------
 // EDIT THIS PART to change the content of the resume page
 // ---------------------------------------------------------------------------
-const PDF = "/resume/resume.pdf";
+const PDF = "/resume/VijayamanikandanT_Resume.pdf";
 const FILE_NAME = "Vijayamanikandan_T_Resume.pdf";
 
 const ROLE = "Python Full Stack Developer";
