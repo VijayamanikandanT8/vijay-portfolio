@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { isLite } from "../lib/perf";
+import { isLite, isLow } from "../lib/perf";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
@@ -128,7 +128,7 @@ export default function AboutCore({ energy }: { energy: AboutEnergy }) {
     let disposed = false;
 
     const renderer = new THREE.WebGLRenderer({ antialias: !isLite(), alpha: true, powerPreference: "high-performance" });
-    const PR = Math.min(window.devicePixelRatio || 1, isLite() ? 1.25 : 2);
+    const PR = isLow() ? 0.75 : Math.min(window.devicePixelRatio || 1, isLite() ? 1.25 : 2);
     renderer.setPixelRatio(PR);
     renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -408,6 +408,7 @@ export default function AboutCore({ energy }: { energy: AboutEnergy }) {
     const loop = () => {
       raf = requestAnimationFrame(loop);
       const now = performance.now();
+      if (isLow() && now - last < 30) return; // ~30fps on devices without a GPU (time keeps accumulating, so speed is unchanged)
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       if (!visible) return;

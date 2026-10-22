@@ -127,7 +127,11 @@ export default function App() {
   }, []);
 
   if (loading) {
-    return <div className="boot-preload" aria-busy="true" />;
+    return (
+      <div className="boot-preload boot-preload--error" aria-busy="true">
+        <p>Loading&hellip;<br />the server may take a few seconds to wake up.</p>
+      </div>
+    );
   }
 
   if (error || !data) {

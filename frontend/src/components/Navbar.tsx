@@ -255,6 +255,16 @@
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navbar.links]);
 
+  // Close the mobile menu if the screen grows past the tablet breakpoint (rotate / resize).
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1200px)");
+    const onChange = () => {
+      if (mq.matches) setOpen(false);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   // Close the mobile menu with Escape.
   useEffect(() => {
     if (!open) return;

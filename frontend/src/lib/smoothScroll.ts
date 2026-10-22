@@ -1,7 +1,7 @@
 import Lenis from "lenis";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { isTouch, markLite } from "./perf";
+import { isTouch, markLite, isLow } from "./perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,7 +27,7 @@ export function initSmoothScroll() {
 
   // Mouse wheel / trackpad: eased glide. Touch: set SYNC_TOUCH to false to use the
   // phone's own native scrolling instead (pinned sections may then shake slightly).
-  const SYNC_TOUCH = true;
+  const SYNC_TOUCH = !isLow();
   const lenis = new Lenis({
     lerp: 0.14,
     smoothWheel: true,

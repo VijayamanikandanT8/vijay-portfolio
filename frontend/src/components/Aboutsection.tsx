@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import ParticleField from "./ParticleField";
-import AboutCore from "./AboutCore";
+const AboutCore = lazy(() => import("./AboutCore"));
 import { glideTo } from "../lib/glide";
 import type { AboutEnergy } from "./AboutCore";
 import type { SiteData } from "../types/site";
@@ -579,7 +579,9 @@ export default function AboutSection({ data }: { data: SiteData }) {
       <div className="ab-core-pos" aria-hidden="true">
         <div className="ab-core">
           <div className="ab-core__tilt">
-            <AboutCore energy={energy} />
+            <Suspense fallback={null}>
+              <AboutCore energy={energy} />
+            </Suspense>
           </div>
         </div>
       </div>

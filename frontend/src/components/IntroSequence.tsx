@@ -147,7 +147,7 @@ export default function IntroSequence({ onComplete }: Props) {
     // as the "Hi, I'm" stagger takes to finish (7 chars * 0.16s delay +
     // 0.85s pop-in = 1.81s), so VIJAY starts the instant it's done —
     // no added pause.
-    tl.to({}, { duration: 2.0 }, 0);
+    tl.to({}, { duration: 2.4 }); // wait until INITIALIZING has fully appeared, then start writing
 
     tl.call(() => {
       setStage("letters");
