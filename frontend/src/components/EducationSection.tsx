@@ -306,7 +306,7 @@ export default function EducationSection() {
       <div className="edu-main">
         <div className="edu-frame">
           <div className="edu-frame__title">
-            <h1 className="edu-frame__title-main">Education</h1>
+            <h2 className="edu-frame__title-main">Education</h2>
           </div>
           <div className="edu-frame__credits">Schools &amp; qualifications</div>
         </div>

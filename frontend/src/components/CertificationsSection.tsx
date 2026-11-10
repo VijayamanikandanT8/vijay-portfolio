@@ -315,7 +315,7 @@ export default function CertificationsSection() {
     <section className="certifications" id="certifications" ref={rootRef}>
       <div className="cert-main">
         <div className="cert-frame">
-          <h1 className="cert-frame__title">Certifications</h1>
+          <h2 className="cert-frame__title">Certifications</h2>
           <span className="cert-frame__sub">Courses &amp; credentials</span>
         </div>
 

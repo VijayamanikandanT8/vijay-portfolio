@@ -28,7 +28,7 @@ from email.utils import formataddr, parseaddr
 from urllib.parse import quote
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, Response, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 load_dotenv()
@@ -547,6 +547,28 @@ def on_error(e):
 @app.route("/api/health")
 def health():
     return jsonify({"status": "ok"})
+
+
+def _site_url():
+    url = os.getenv("SITE_URL", "").strip().rstrip("/")
+    return url or request.host_url.rstrip("/").replace("http://", "https://")
+
+
+@app.route("/robots.txt")
+def robots():
+    body = f"User-agent: *\nAllow: /\n\nSitemap: {_site_url()}/sitemap.xml\n"
+    return Response(body, mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"  <url><loc>{_site_url()}/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>\n"
+        "</urlset>\n"
+    )
+    return Response(xml, mimetype="application/xml")
 
 
 @app.route("/", defaults={"path": ""})
