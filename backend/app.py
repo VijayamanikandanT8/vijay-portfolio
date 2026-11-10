@@ -554,6 +554,11 @@ def _site_url():
     return url or request.host_url.rstrip("/").replace("http://", "https://")
 
 
+@app.route("/googleb4c37d23f078745e.html")
+def google_verify():
+    return Response("google-site-verification: googleb4c37d23f078745e.html", mimetype="text/html")
+
+
 @app.route("/robots.txt")
 def robots():
     body = f"User-agent: *\nAllow: /\n\nSitemap: {_site_url()}/sitemap.xml\n"
